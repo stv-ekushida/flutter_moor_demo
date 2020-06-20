@@ -22,15 +22,18 @@ List<SingleChildWidget> dependentModels = [
   ProxyProvider<AppDatabase, MemoDao>(
     update: (context, db, dao) => MemoDao(db),
   ),
-  ProxyProvider<MemoDao, MemoRepository>(
-    update: (context, dao, repository) => MemoRepository(dao: dao),
+  ChangeNotifierProvider<MemoRepository>(
+    create: (context) =>
+        MemoRepository(dao: Provider.of<MemoDao>(context, listen: false)),
   ),
 ];
 
 List<SingleChildWidget> viewModels = [
-  ChangeNotifierProvider<MemoViewModel>(
+  ChangeNotifierProxyProvider<MemoRepository, MemoViewModel>(
     create: (context) => MemoViewModel(
       repository: Provider.of<MemoRepository>(context, listen: false),
     ),
+    update: (context, repository, viewModel) =>
+        viewModel..onRepositoryUpdated(repository),
   )
 ];

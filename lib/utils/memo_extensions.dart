@@ -34,10 +34,10 @@ extension ConvertToMemos on List<MemoEntity> {
 
     memoEntities.forEach((memo) {
       memos.add(Memo(
-          id: memo.id,
+          id: memo.id ?? "",
           title: memo.title ?? "",
           content: memo.content ?? "",
-          created: memo.created));
+          created: memo.created ?? ""));
     });
     return memos;
   }

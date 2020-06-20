@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_moor_demo/models/db/database.dart';
 import 'package:flutter_moor_demo/models/model/memo.dart';
 import 'package:flutter_moor_demo/models/repositories/memo_repository.dart';
 import 'package:flutter_moor_demo/utils/memo_extensions.dart';
@@ -13,10 +12,8 @@ class MemoViewModel extends ChangeNotifier {
   List<Memo> get memos => _memos;
 
   Future<void> getMemos() async {
-    final List<MemoEntity> memoEntities = await _repository.getMemos();
-
-    _memos = memoEntities.toMemos(memoEntities);
-    notifyListeners();
+    print("[viewModel] : getMemos");
+    await _repository.getMemos();
   }
 
   Future<void> addMemo(Memo memo) async {
@@ -30,5 +27,12 @@ class MemoViewModel extends ChangeNotifier {
   @override
   void dispose() {
     super.dispose();
+  }
+
+  onRepositoryUpdated(MemoRepository repository) {
+    print("[viewModel] : onRepositoryUpdated");
+
+    _memos = repository.memos;
+    notifyListeners();
   }
 }

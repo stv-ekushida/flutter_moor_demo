@@ -1,16 +1,23 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_moor_demo/models/db/dao.dart';
 import 'package:flutter_moor_demo/models/db/database.dart';
+import 'package:flutter_moor_demo/models/model/memo.dart';
+import 'package:flutter_moor_demo/utils/memo_extensions.dart';
 
-class MemoRepository {
+class MemoRepository extends ChangeNotifier {
   final MemoDao _dao;
 
   MemoRepository({dao}) : _dao = dao;
 
-  Future<List<MemoEntity>> getMemos() async {
-    List<MemoEntity> result = List<MemoEntity>();
+  List<Memo> _memos = List<Memo>();
+  List<Memo> get memos => _memos;
 
-    result = await _dao.findAllOrderByCreated;
-    return result;
+  getMemos() async {
+    print("[Repository] : getMemos");
+
+    List<MemoEntity> result = await _dao.findAllOrderByCreated;
+    _memos = result.toMemos(result);
+    notifyListeners();
   }
 
   Future<int> addMemo(MemoEntity memo) async {
