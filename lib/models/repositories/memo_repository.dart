@@ -16,4 +16,8 @@ class MemoRepository {
   Future<int> addMemo(MemoEntity memo) async {
     return await _dao.insert(memo);
   }
+
+  Future<void> removeMemo(MemoEntity memo) async {
+    return await _dao.clearById(memo);
+  }
 }

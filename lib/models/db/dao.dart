@@ -10,6 +10,10 @@ class MemoDao extends DatabaseAccessor<AppDatabase> with _$MemoDaoMixin {
   //全削除
   Future clearAll() => delete(memoEntities).go();
 
+  //該当のデータ削除
+  Future clearById(MemoEntity memo) =>
+      (delete(memoEntities)..where((m) => m.id.equals(memo.id))).go();
+
   //登録
   Future insert(MemoEntity memo) async {
     await into(memoEntities).insert(memo);

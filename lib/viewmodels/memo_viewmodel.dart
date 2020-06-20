@@ -23,6 +23,10 @@ class MemoViewModel extends ChangeNotifier {
     await _repository.addMemo(memo.toMemoEntity(memo));
   }
 
+  Future<void> removeMemo(Memo memo) async {
+    await _repository.removeMemo(memo.toMemoEntity(memo));
+  }
+
   @override
   void dispose() {
     super.dispose();

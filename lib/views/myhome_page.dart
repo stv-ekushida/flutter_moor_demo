@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_moor_demo/models/model/memo.dart';
 import 'package:flutter_moor_demo/viewmodels/memo_viewmodel.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -25,10 +26,27 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context, model, child) {
             return ListView.builder(
                 itemCount: model.memos.length,
-                itemBuilder: (context, int position) => ListTile(
-                      title: Text(model.memos[position].title),
-                      subtitle: Text(model.memos[position].created
-                          .toStringCreated(model.memos[position].created)),
+                itemBuilder: (context, int position) => Slidable(
+                      actionPane: SlidableDrawerActionPane(),
+                      actionExtentRatio: 0.25,
+                      child: Container(
+                        color: Colors.white,
+                        child: ListTile(
+                          title: Text(model.memos[position].title),
+                          subtitle: Text(model.memos[position].created
+                              .toStringCreated(model.memos[position].created)),
+                        ),
+                      ),
+                      actions: [
+                        IconSlideAction(
+                          caption: '削除',
+                          color: Colors.red,
+                          icon: Icons.delete,
+                          onTap: () {
+                            _remove(model.memos[position]);
+                          },
+                        )
+                      ],
                     ));
           },
         ),
@@ -53,6 +71,14 @@ class _MyHomePageState extends State<MyHomePage> {
         Memo(title: "title", content: "content", created: DateTime.now());
 
     viewModel.addMemo(memo);
+    _loadMemos();
+  }
+
+  _remove(Memo memo) {
+    final MemoViewModel viewModel =
+        Provider.of<MemoViewModel>(context, listen: false);
+
+    viewModel.removeMemo(memo);
     _loadMemos();
   }
 }
